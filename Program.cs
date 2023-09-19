@@ -6,7 +6,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using static System.Console;
-using System.Formats.Asn1;
+using Lab_1;
 
 namespace Lab2
 {
@@ -15,7 +15,7 @@ namespace Lab2
         static void Main(string[] args)
         {
             //file location will differ, so will need to be changed to accomodate that
-            string FilePath = "C:\\Users\\Owner\\source\\repos\\Lab2\\Lab2\\videogames.csv";
+            string FilePath = "C:\\Users\\robertsej1\\source\\repos\\Lab 1\\Lab 1\\videogames.csv";
 
             List<VideoGames> data = new();
 
@@ -26,7 +26,7 @@ namespace Lab2
                 HeaderValidated = null,
                 MissingFieldFound = null,
                 HasHeaderRecord = false
-            };           
+            };
 
             var csv = new CsvReader(reader, csvConfig);
             {
@@ -39,13 +39,18 @@ namespace Lab2
                     data.Add(record);
                 }
             }
-          
-            Dictionary<string, List<VideoGames>> dictionary = data.GroupBy(x => x.Platform).ToDictionary(gcs => gcs.Key, gcs => gcs.ToList());
-            
+
+
+            Dictionary<string, List<VideoGames>> dictionary = data
+                .OrderByDescending(x => x.GlobalSales)
+                .GroupBy(x => x.Platform).ToDictionary(gcs => gcs.Key, gcs => gcs.ToList());
 
             foreach (var kvp in dictionary)
             {
-                WriteLine(kvp.Key, string.Join(",", kvp.Value));
+                for (int index = 0; index < 5; index++)
+                {
+                    WriteLine(kvp.Key + " - " + kvp.Value[index].Name + " - " + kvp.Value[index].GlobalSales);
+                }
             }
         }
     }
